@@ -67,6 +67,19 @@ int part1(const std::vector<std::vector<std::string>>& stringArray) {
     return sum;
 }
 
+int part2(const std::vector<std::vector<std::string>>& stringArray) {
+    int sum = 0;
+    int* smudgeCoordinates = new smudgeCoordinates;
+
+    for(const auto& strings : stringArray) {
+        sum += findSymmetriWithSmudge(strings, smudgeCoordinates);
+    }
+
+    delete(smudgeCoordinates);
+    return sum;
+}
+
+
 int calculateRows(std::vector<std::string> strings) {
     int columns = strings[0].size(), rows = strings.size();
     int half = rows / 2;
@@ -173,4 +186,68 @@ int calculateColumns(std::vector<std::string> strings) {
     }
 
     return i + 1;
+}
+
+int findSymmetriWithSmudge(std::vector<std::string>& strings, int* smudgeCord) {
+    int sum = 0, difCounter;
+    int rows = strings.size(), columns = strings[0].size();
+    bool flag;
+
+    //Loop through columns:
+    for(int i = 0; i < columns - 1; i++) {
+        difCounter = 0;
+        for(int j = 0; j < rows; j++) {
+            if(strings[j][i] != strings[j][i + 1]) {
+                difCounter++;
+                smudgeCord[0] = j;
+                smudgeCord[1] = i;
+            }
+        }
+
+        if(difCounter == 1){
+            strings[smudgeCord[0]][smudgeCord[1]] = smudgeFixer(strings[smudgeCord[0]][smudgeCord[1]]);
+            flag = true;
+            break;
+        }
+    }
+    if(flag)
+        return calculateColumns(strings);
+
+    sum += smudgeFinderForColumnsAdv(strings, smudgeCord);
+    if(sum != 0) {
+        return sum;
+    }
+
+    //Loop through rows
+    for(int i = 0; i < rows - 1; i++) {
+        difCounter = 0;
+        for(int j = 0; j < columns; j++) {
+            if(strings[i][j] != strings[i + 1][j]) {
+                difCounter++;
+                smudgeCord[0] = j;
+                smudgeCord[1] = i;
+            }
+        }
+
+        if(difCounter == 1){
+            strings[smudgeCord[1]][smudgeCord[0]] = smudgeFixer(strings[smudgeCord[1]][smudgeCord[0]]);
+            flag = true;
+            break;
+        }
+    }
+    if(flag)
+        return calculateRows(strings);
+
+    sum += smudgeFinderForRowsAdv(strings, smudgeCord);
+
+    return sum;
+}
+
+char smudgeFixer(char ch) {
+    switch(ch) {
+        case '#':
+            return '.';
+        case '.':
+            return '#';
+    }
 }
