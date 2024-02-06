@@ -223,7 +223,7 @@ int findSymmetryWithSmudge(std::vector<std::string>& strings, int* smudgeCord) {
         }
     }
     if(flag)
-        return calculateColumns(strings);
+        return calculateColumns(strings, 0);
 
     sum += smudgeFinderForColumnsAdv(strings, smudgeCord, rows, columns, 0);
     if(sum != 0) {
@@ -249,7 +249,7 @@ int findSymmetryWithSmudge(std::vector<std::string>& strings, int* smudgeCord) {
         }
     }
     if(flag)
-        return calculateRows(strings);
+        return calculateRows(strings, 0);
 
     sum += smudgeFinderForRowsAdv(strings, smudgeCord, rows, columns, 0);
 
