@@ -14,5 +14,5 @@ file(GLOB SOURCES "day14_cpp/*.cpp")
 # Add an executable target called "your_executable_name" from the source file "main.cpp"
 add_executable(day13 ${SOURCES}
         Day13_cpp/main13.cpp)
-add_executable(day14 ${SOURCES}
-        Day14_cpp/main14.cpp)
+add_executable(day14
+        Day14_cpp/main.cpp)

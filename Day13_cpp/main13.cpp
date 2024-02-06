@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <sstream>
 #include <vector>
 #include <string>
 #include <cmath>
@@ -18,7 +17,7 @@ int smudgeFinderForColumnsAdv(std::vector<std::string>& strings, int* smudgeCord
 int main() {
 
     std::vector<std::vector<std::string>> stringArray;
-    readFile("input.txt", stringArray);
+    readFile("test.txt", stringArray);
 
     /*for (const auto& paragraph : stringArray) {
         for (const auto& line : paragraph) {
@@ -195,7 +194,7 @@ int calculateColumns(std::vector<std::string> strings) {
 int findSymmetryWithSmudge(std::vector<std::string>& strings, int* smudgeCord) {
     int sum = 0, difCounter;
     int rows = strings.size(), columns = strings[0].size();
-    bool flag;
+    bool flag = false;
 
     //Loop through columns:
     for(int i = 0; i < columns - 1; i++) {
@@ -223,6 +222,7 @@ int findSymmetryWithSmudge(std::vector<std::string>& strings, int* smudgeCord) {
     }
 
     //Loop through rows
+    flag = false;
     for(int i = 0; i < rows - 1; i++) {
         difCounter = 0;
         for(int j = 0; j < columns; j++) {
@@ -252,7 +252,7 @@ int smudgeFinderForColumnsAdv(std::vector<std::string>& strings, int* smudgeCord
     int i;
     bool flag;
     int half = ceil((double)columns / 2);
-    int difCounter = 0;
+    int difCounter;
 
 
     for(i = startIndex; i < columns - 1; i++) {
