@@ -9,6 +9,7 @@ void readFile(const std::string& filename, std::vector<std::vector<std::string>>
 int part1(const std::vector<std::vector<std::string>>& stringArray);
 int calculateRows(std::vector<std::string> strings);
 int calculateColumns(std::vector<std::string> strings);
+char smudgeFixer(char ch);
 
 int main() {
 
@@ -69,10 +70,10 @@ int part1(const std::vector<std::vector<std::string>>& stringArray) {
 
 int part2(const std::vector<std::vector<std::string>>& stringArray) {
     int sum = 0;
-    int* smudgeCoordinates = new smudgeCoordinates;
+    int* smudgeCoordinates = new int[2];
 
     for(const auto& strings : stringArray) {
-        sum += findSymmetriWithSmudge(strings, smudgeCoordinates);
+        sum += findSymmetryWithSmudge(strings, smudgeCoordinates);
     }
 
     delete(smudgeCoordinates);
@@ -82,7 +83,7 @@ int part2(const std::vector<std::vector<std::string>>& stringArray) {
 
 int calculateRows(std::vector<std::string> strings) {
     int columns = strings[0].size(), rows = strings.size();
-    int half = rows / 2;
+    int half = ceil((double) rows / 2);
     if(rows % 2 == 1)
         half++;
     int i;
@@ -135,10 +136,8 @@ int calculateRows(std::vector<std::string> strings) {
 
 int calculateColumns(std::vector<std::string> strings) {
     int columns = strings[0].size(), rows = strings.size();
-    int half = columns / 2;
-    if(columns % 2 == 1) {
-        half++;
-    }
+    int half =ceil((double) columns / 2);
+
     int i;
     bool twoIdenticals;
 
@@ -213,7 +212,7 @@ int findSymmetriWithSmudge(std::vector<std::string>& strings, int* smudgeCord) {
     if(flag)
         return calculateColumns(strings);
 
-    sum += smudgeFinderForColumnsAdv(strings, smudgeCord);
+    sum += smudgeFinderForColumnsAdv(strings, smudgeCord, rows, columns);
     if(sum != 0) {
         return sum;
     }
@@ -242,6 +241,147 @@ int findSymmetriWithSmudge(std::vector<std::string>& strings, int* smudgeCord) {
 
     return sum;
 }
+
+int smudgeFinderForColumnsAdv(std::vector<std::string>& strings, int* smudgeCord, int& rows, int& columns, int& startIndex) {
+
+    int i;
+    bool flag;
+    int half = ceil((double)columns / 2);
+    int difCounter = 0;
+
+
+    for(i = startIndex; i < columns - 1; i++) {
+        flag = true;
+
+        for (int j = 0; j < rows; j++) {
+            if (strings[j][i] != strings[j][i + 1]) {
+                flag = false;
+                break;
+            }
+        }
+
+        if(flag)
+            break;
+    }
+
+    if(!flag)
+        return 0;
+
+    else if(columns - (i + 1) >= half ) {
+        int compareDif = 3;
+        for(int k = i - 1; k >= 0; k--){
+            difCounter = 0;
+            for(int j = 0; j < rows; j++) {
+                if(strings[j][k] != strings[j][k + compareDif]){
+                    difCounter++;
+                    smudgeCord[0] = j;
+                    smudgeCord[1] = k;
+                }
+
+            }
+
+            if(difCounter > 1)
+                return smudgeFinderForColumnsAdv(strings, smudgeCord, rows, columns, startIndex);
+
+            compareDif+=2;
+        }
+
+    } else {
+        int compareDif = -3;
+        for (int k = i + 2; k < columns; k++) {
+            difCounter = 0;
+            for (int j = 0; j < rows; j++) {
+                if (strings[j][k] != strings[j][k + compareDif]) {
+                    difCounter++;
+                    smudgeCord[0] = j;
+                    smudgeCord[1] = k;
+                }
+
+            }
+
+            if (difCounter > 1)
+                return smudgeFinderForColumnsAdv(strings, smudgeCord, rows, columns, startIndex);
+
+
+            compareDif -= 2;
+
+        }
+    }
+
+    return (i + 1) * 100;
+
+
+}
+
+int smudgeFinderForRowsAdv(std::vector<std::string>& strings, int* smudgeCord, int& rows, int& columns, int& startIndex) {
+    int i;
+    bool flag;
+    int half = ceil((double)rows / 2);
+    int difCounter = 0;
+
+
+    for(i = startIndex; i < rows - 1; i++) {
+        flag = true;
+
+        for (int j = 0; j < columns; j++) {
+            if (strings[i][j] != strings[i + 1][j]) {
+                flag = false;
+                break;
+            }
+        }
+
+        if(flag)
+            break;
+    }
+
+    if(!flag)
+        return 0;
+
+    else if(rows - (i + 1) >= half ) {
+        int compareDif = 3;
+        for(int k = i - 1; k >= 0; k--){
+            difCounter = 0;
+            for(int j = 0; j < columns; j++) {
+                if(strings[k][j] != strings[k + compareDif][j]){
+                    difCounter++;
+                    smudgeCord[0] = k;
+                    smudgeCord[1] = j;
+                }
+
+            }
+
+            if(difCounter > 1)
+                return smudgeFinderForRowsAdv(strings, smudgeCord, rows, columns, startIndex);
+
+
+            compareDif+=2;
+        }
+
+    } else {
+        int compareDif = -3;
+        for (int k = i + 2; k < rows; k++) {
+            difCounter = 0;
+            for (int j = 0; j < columns; j++) {
+                if (strings[k][j] != strings[k + compareDif][j]) {
+                    difCounter++;
+                    smudgeCord[0] = k;
+                    smudgeCord[1] = j;
+                }
+
+            }
+
+            if (difCounter > 1)
+                return smudgeFinderForRowsAdv(strings, smudgeCord, rows, columns, startIndex);
+
+
+            compareDif -= 2;
+
+        }
+    }
+
+    return (i + 1) * 100;
+}
+
 
 char smudgeFixer(char ch) {
     switch(ch) {
