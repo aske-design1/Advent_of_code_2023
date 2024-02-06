@@ -7,8 +7,8 @@
 void readFile(const std::string& filename, std::vector<std::vector<std::string>>& paragraphs);
 int part1(const std::vector<std::vector<std::string>>& stringArray);
 int part2(std::vector<std::vector<std::string>>& stringArray);
-int calculateRows(std::vector<std::string> strings);
-int calculateColumns(std::vector<std::string> strings);
+int calculateRows(std::vector<std::string> strings, int startIndex);
+int calculateColumns(std::vector<std::string> strings, int startIndex);
 char smudgeFixer(char ch);
 int smudgeFinderForRowsAdv(std::vector<std::string>& strings, int* smudgeCord, int& rows, int& columns, int startIndex);
 int findSymmetryWithSmudge(std::vector<std::string>& strings, int* smudgeCord);
@@ -63,10 +63,14 @@ void readFile(const std::string& filename, std::vector<std::vector<std::string>>
 int part1(const std::vector<std::vector<std::string>>& stringArray) {
     int sum = 0;
 
-    for(const auto& strings : stringArray) {
-        sum += calculateRows(strings);
 
-        sum += calculateColumns(strings);
+    for(const auto& strings : stringArray) {
+        int sum2 = 0;
+        sum2 += calculateRows(strings, 0);
+
+        sum2 += calculateColumns(strings, 0);
+        std::cout << sum2 << std::endl;
+        sum += sum2;
     }
 
     return sum;
@@ -85,15 +89,18 @@ int part2(std::vector<std::vector<std::string>>& stringArray) {
 }
 
 
-int calculateRows(std::vector<std::string> strings) {
+int calculateRows(std::vector<std::string> strings, int startIndex) {
+
+
     int columns = strings[0].size(), rows = strings.size();
     int half = ceil((double) rows / 2);
     if(rows % 2 == 1)
         half++;
-    int i;
-    bool flag;
 
-    for(i = 0; i < rows - 1; i++) {
+    int i;
+    bool flag = false;
+
+    for(i = startIndex; i < rows - 1; i++) {
         flag = true;
 
         for (int j = 0; j < columns; j++) {
@@ -103,11 +110,10 @@ int calculateRows(std::vector<std::string> strings) {
             }
         }
 
-        if(flag)
+        if(flag) {
             break;
+        }
     }
-
-
 
     if(!flag) {
         return 0;
@@ -116,7 +122,7 @@ int calculateRows(std::vector<std::string> strings) {
         for(int k = i - 1; k >= 0; k--){
             for(int j = 0; j < columns; j++) {
                 if(strings[k][j] != strings[k + compareDif][j]){
-                    return 0;
+                    return calculateRows(strings, i + 1 );
                 }
 
             }
@@ -125,10 +131,11 @@ int calculateRows(std::vector<std::string> strings) {
 
     } else {
         int compareDif = -3;
+
         for(int k = i + 2; k < rows; k++){
             for(int j = 0; j < columns; j++) {
                 if(strings[k][j] != strings[k + compareDif][j]){
-                    return 0;
+                    return calculateRows(strings, i + 1);
                 }
             }
             compareDif-=2;
@@ -138,14 +145,14 @@ int calculateRows(std::vector<std::string> strings) {
     return (i + 1) * 100;
 }
 
-int calculateColumns(std::vector<std::string> strings) {
+int calculateColumns(std::vector<std::string> strings, int startIndex) {
     int columns = strings[0].size(), rows = strings.size();
     int half =ceil((double) columns / 2);
 
     int i;
-    bool twoIdenticals;
+    bool twoIdenticals = false;
 
-    for(i = 0; i < columns - 1; i++) {
+    for(i = startIndex; i < columns - 1; i++) {
         twoIdenticals = true;
 
         for (int j = 0; j < rows; j++) {
@@ -165,11 +172,12 @@ int calculateColumns(std::vector<std::string> strings) {
         return 0;
 
     else if(columns - (i + 1) >= half) {
+        std::cout << startIndex + 1 << std::endl;
         compareDif = 3;
         for(int k = i - 1; k >= 0; k--){
             for(int j = 0; j < rows; j++) {
                 if(strings[j][k] != strings[j][k + compareDif]){
-                    return 0;
+                    return calculateColumns(strings, i + 1);
                 }
 
             }
@@ -177,11 +185,12 @@ int calculateColumns(std::vector<std::string> strings) {
         }
 
     } else {
+        std::cout << startIndex + 1 << std::endl;
         compareDif = -3;
         for(int k = i + 2; k < columns; k++){
             for(int j = 0; j < rows; j++) {
                 if(strings[j][k] != strings[j][k + compareDif]){
-                    return 0;
+                    return calculateColumns(strings, i + 1 );
                 }
             }
             compareDif-=2;
