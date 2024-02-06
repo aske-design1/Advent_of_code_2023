@@ -10,6 +10,9 @@ int part1(const std::vector<std::vector<std::string>>& stringArray);
 int calculateRows(std::vector<std::string> strings);
 int calculateColumns(std::vector<std::string> strings);
 char smudgeFixer(char ch);
+int smudgeFinderForRowsAdv(std::vector<std::string>& strings, int* smudgeCord, int& rows, int& columns, int& startIndex);
+int findSymmetryWithSmudge(std::vector<std::string>& strings, int* smudgeCord);
+int smudgeFinderForColumnsAdv(std::vector<std::string>& strings, int* smudgeCord, int& rows, int& columns, int& startIndex);
 
 int main() {
 
@@ -187,7 +190,7 @@ int calculateColumns(std::vector<std::string> strings) {
     return i + 1;
 }
 
-int findSymmetriWithSmudge(std::vector<std::string>& strings, int* smudgeCord) {
+int findSymmetryWithSmudge(std::vector<std::string>& strings, int* smudgeCord) {
     int sum = 0, difCounter;
     int rows = strings.size(), columns = strings[0].size();
     bool flag;
