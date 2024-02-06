@@ -7,12 +7,13 @@
 
 void readFile(const std::string& filename, std::vector<std::vector<std::string>>& paragraphs);
 int part1(const std::vector<std::vector<std::string>>& stringArray);
+int part2(std::vector<std::vector<std::string>>& stringArray);
 int calculateRows(std::vector<std::string> strings);
 int calculateColumns(std::vector<std::string> strings);
 char smudgeFixer(char ch);
-int smudgeFinderForRowsAdv(std::vector<std::string>& strings, int* smudgeCord, int& rows, int& columns, int& startIndex);
+int smudgeFinderForRowsAdv(std::vector<std::string>& strings, int* smudgeCord, int& rows, int& columns, int startIndex);
 int findSymmetryWithSmudge(std::vector<std::string>& strings, int* smudgeCord);
-int smudgeFinderForColumnsAdv(std::vector<std::string>& strings, int* smudgeCord, int& rows, int& columns, int& startIndex);
+int smudgeFinderForColumnsAdv(std::vector<std::string>& strings, int* smudgeCord, int& rows, int& columns, int startIndex);
 
 int main() {
 
@@ -26,9 +27,10 @@ int main() {
         std::cout << "=== New Paragraph ===" << std::endl;
     }*/
 
-    int answer = part1(stringArray);
-    std::cout << "\n\nThe answer for part 1 is: " << answer << std::endl;
-
+    //int answer = part1(stringArray);
+    //std::cout << "\n\nThe answer for part 1 is: " << answer << std::endl;
+    int answer2 = part2(stringArray);
+    std::cout << "\n\nThe answer for part 2 is: " << answer2 << std::endl;
 
     return 0;
 }
@@ -71,11 +73,11 @@ int part1(const std::vector<std::vector<std::string>>& stringArray) {
     return sum;
 }
 
-int part2(const std::vector<std::vector<std::string>>& stringArray) {
+int part2(std::vector<std::vector<std::string>>& stringArray) {
     int sum = 0;
     int* smudgeCoordinates = new int[2];
 
-    for(const auto& strings : stringArray) {
+    for(std::vector<std::string>& strings : stringArray) {
         sum += findSymmetryWithSmudge(strings, smudgeCoordinates);
     }
 
@@ -215,7 +217,7 @@ int findSymmetryWithSmudge(std::vector<std::string>& strings, int* smudgeCord) {
     if(flag)
         return calculateColumns(strings);
 
-    sum += smudgeFinderForColumnsAdv(strings, smudgeCord, rows, columns);
+    sum += smudgeFinderForColumnsAdv(strings, smudgeCord, rows, columns, 0);
     if(sum != 0) {
         return sum;
     }
@@ -240,12 +242,12 @@ int findSymmetryWithSmudge(std::vector<std::string>& strings, int* smudgeCord) {
     if(flag)
         return calculateRows(strings);
 
-    sum += smudgeFinderForRowsAdv(strings, smudgeCord);
+    sum += smudgeFinderForRowsAdv(strings, smudgeCord, rows, columns, 0);
 
     return sum;
 }
 
-int smudgeFinderForColumnsAdv(std::vector<std::string>& strings, int* smudgeCord, int& rows, int& columns, int& startIndex) {
+int smudgeFinderForColumnsAdv(std::vector<std::string>& strings, int* smudgeCord, int& rows, int& columns, int startIndex) {
 
     int i;
     bool flag;
@@ -316,7 +318,7 @@ int smudgeFinderForColumnsAdv(std::vector<std::string>& strings, int* smudgeCord
 
 }
 
-int smudgeFinderForRowsAdv(std::vector<std::string>& strings, int* smudgeCord, int& rows, int& columns, int& startIndex) {
+int smudgeFinderForRowsAdv(std::vector<std::string>& strings, int* smudgeCord, int& rows, int& columns, int startIndex) {
     int i;
     bool flag;
     int half = ceil((double)rows / 2);
