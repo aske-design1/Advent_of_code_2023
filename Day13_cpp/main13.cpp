@@ -4,7 +4,7 @@
 #include <string>
 #include <cmath>
 
-void readFile(const std::string& filename, std::vector<std::vector<std::string>>& paragraphs);
+void ReadFile(const std::string& filename, std::vector<std::vector<std::string>>& paragraphs);
 int part1(const std::vector<std::vector<std::string>>& stringArray);
 int part2(std::vector<std::vector<std::string>>& stringArray);
 int calculateRows(std::vector<std::string> strings);
@@ -17,7 +17,7 @@ int smudgeFinderForColumnsAdv(std::vector<std::string>& strings, int* smudgeCord
 int main() {
 
     std::vector<std::vector<std::string>> stringArray;
-    readFile("test.txt", stringArray);
+    ReadFile("test.txt", stringArray);
 
     /*for (const auto& paragraph : stringArray) {
         for (const auto& line : paragraph) {
@@ -37,7 +37,7 @@ int main() {
 /**
  * Reads the file and puts it into an array of an array of strings.
  * */
-void readFile(const std::string& filename, std::vector<std::vector<std::string>>& paragraphs) {
+void ReadFile(const std::string& filename, std::vector<std::vector<std::string>>& paragraphs) {
     std::ifstream file(filename);
     std::vector<std::string> currentParagraph;
     std::string line;
@@ -343,6 +343,7 @@ int smudgeFinderForRowsAdv(std::vector<std::string>& strings, int* smudgeCord, i
         return 0;
 
     else if(rows - (i + 1) >= half ) {
+        flag = false;
         int compareDif = 3;
         for(int k = i - 1; k >= 0; k--){
             difCounter = 0;
@@ -357,12 +358,14 @@ int smudgeFinderForRowsAdv(std::vector<std::string>& strings, int* smudgeCord, i
 
             if(difCounter > 1)
                 return smudgeFinderForRowsAdv(strings, smudgeCord, rows, columns, startIndex);
-
+            else if (difCounter == 1 )
+                flag = true;
 
             compareDif+=2;
         }
 
     } else {
+        flag = false;
         int compareDif = -3;
         for (int k = i + 2; k < rows; k++) {
             difCounter = 0;
@@ -375,18 +378,21 @@ int smudgeFinderForRowsAdv(std::vector<std::string>& strings, int* smudgeCord, i
 
             }
 
+
             if (difCounter > 1)
                 return smudgeFinderForRowsAdv(strings, smudgeCord, rows, columns, startIndex);
-
+            else if (difCounter == 1)
+                flag = true;
 
             compareDif -= 2;
 
         }
     }
-
-    return (i + 1) * 100;
+    if(flag)
+        return (i + 1) * 100;
+    else
+        return 0;
 }
-
 
 char smudgeFixer(char ch) {
     switch(ch) {
