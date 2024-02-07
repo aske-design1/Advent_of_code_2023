@@ -8,7 +8,7 @@ void ReadFile(const std::string& filename, std::vector<std::vector<std::string>>
 int calculateStoneNorth(const std::vector<std::string>& strings, int y, int x, int totalRows);
 int calculateLoad(const std::vector<std::string>& strings);
 int Part1(const std::vector<std::vector<std::string>>& stringArray);
-void StringCycler(std::vector<std::string>* strings);
+void StringCycler(std::vector<std::string>& strings);
 
 int main() {
 
@@ -46,26 +46,33 @@ void ReadFile(const std::string& filename, std::vector<std::vector<std::string>>
 
 int part2(const std::vector<std::vector<std::string>>& stringArray) {
     int sum = 0;
-    int cycles;
+    int cycles = 1;
+    int totalcycles;
     int resultOfFirstCycle;
-    int resultCycle;
+    int resultCycle = 0;
 
-    //so, first figure out the length of a loop of cycles. Essientially, how long does it take for our result to equal the first result
-
-
+    //so, first figure out the length of a loop of cycles. Essentially, how long does it take for our result to equal the first result
 
     for (auto& strings : stringArray) {
         std::vector<std::string> stringToChange = strings;
-        resultOfFirstCycle = StringCycler(stringToChange);
-        while(resultOfFirstCycle != resultOfFirstCycle)
+        StringCycler(stringToChange);
+        resultOfFirstCycle = calculateLoad(stringToChange);
 
-
-        for(int i = 0; i < 1000; i++) {
-            StringCycler(&stringToChange);
+        while (resultOfFirstCycle != resultCycle) {
+            StringCycler(stringToChange);
+            resultCycle = calculateLoad(stringToChange);
+            cycles++;
         }
 
+        totalcycles = 1000000000 % cycles;
+        stringToChange = strings;
+
+        for (int i = 0; i < totalcycles; i++) {
+            StringCycler(stringToChange);
+        }
         sum += calculateLoad(stringToChange);
     }
+
     return sum;
 }
 
@@ -117,17 +124,88 @@ int calculateStoneNorth(const std::vector<std::string>& strings, int y, int x, c
     return totalRows - rocksAbove;
 }
 
-int StringCycler(std::vector<std::string>& strings) {
+void StringCycler(std::vector<std::string>& strings) {
     // Each cycle tilts the platform four times so that the rounded rocks roll north, then west, then south, then east.
+    int ySize = strings.size(), xSize = strings[0].size();
 
     //Tilt North
+    for(int x = 0; x < xSize; x++) {
+        for(int y = 0; y < ySize; y++) {
+            if(strings[y][x] == 'O') {
+                strings[y][x] = '.';
+                int y2;
+                for(y2 = y - 1; y >= 0; y--) {
+                    if(strings[y2][x] == '#') {
+                        strings[y2 + 1][x] = 'O';
+                        break;
+                    }
+                }
+                if(y2 == -1) {
+                    strings[0][x] = 'O';
+                }
+            }
 
+        }
+    }
 
     //Tilt West
+    for(int y = 0; y < ySize; y++) {
+        for(int x = 0; x < xSize; x++) {
+            if(strings[y][x] == 'O') {
+                strings[y][x] = '.';
+                int x2;
+                for(x2 = x - 1; x >= 0; x--) {
+                    if(strings[y][x2] == '#') {
+                        strings[y][x2 + 1] = 'O';
+                        break;
+                    }
+                }
+                if(x2 == -1) {
+                    strings[0][x] = 'O';
+                }
+            }
+
+        }
+    }
 
     //Tilt South
+    for(int x = 0; x < xSize; x++) {
+        for(int y = ySize - 1; y >= 0; y--) {
+            if(strings[y][x] == 'O') {
+                strings[y][x] = '.';
+                int y2;
+                for(y2 = y + 1; y < ySize; y++) {
+                    if(strings[y2][x] == '#') {
+                        strings[y2 - 1][x] = 'O';
+                        break;
+                    }
+                }
+                if(y2 == ySize) {
+                    strings[ySize - 1][x] = 'O';
+                }
+            }
+
+        }
+    }
 
     //Tilt East
+    for(int y = 0; y < ySize; y++) {
+        for(int x = xSize - 1; x >= 0; x--) {
+            if(strings[y][x] == 'O') {
+                strings[y][x] = '.';
+                int x2;
+                for(x2 = x + 1; x < xSize; x++) {
+                    if(strings[y][x2] == '#') {
+                        strings[y][x2 - 1] = 'O';
+                        break;
+                    }
+                }
+                if(x2 == xSize) {
+                    strings[xSize - 1][x] = 'O';
+                }
+            }
 
+        }
+    }
 
 }
