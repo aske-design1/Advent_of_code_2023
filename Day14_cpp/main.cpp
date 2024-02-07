@@ -12,7 +12,6 @@ void StringCycler(std::vector<std::string>& strings);
 int part2(const std::vector<std::vector<std::string>>& stringArray);
 
 int main() {
-
     std::vector<std::vector<std::string>> stringArray;
     ReadFile("test.txt", stringArray);
 
@@ -20,7 +19,6 @@ int main() {
     std::cout << "Answer for part 1: " << answer << std::endl;
     answer = part2(stringArray);
     std::cout << "Answer for part 2: " << answer << std::endl;
-
 
     return 0;
 }
@@ -61,6 +59,8 @@ int part2(const std::vector<std::vector<std::string>>& stringArray) {
         StringCycler(stringToChange);
         resultOfFirstCycle = calculateLoad(stringToChange);
 
+        //std::cout << "here" << std::endl;
+
         while (resultOfFirstCycle != resultCycle) {
             StringCycler(stringToChange);
             resultCycle = calculateLoad(stringToChange);
@@ -97,14 +97,15 @@ int calculateLoad(const std::vector<std::string>& strings) {
     for(int y = 0; y < ySize; y++) {
         for(int x = 0; x < xSize; x++) {
             if(strings[y][x] == 'O') {
-                loadForEach = 0;
+                /*loadForEach = 0;
                 loadForEach += calculateStoneNorth(strings, y, x, ySize);
 
                 //std::cout << "x: " << x << " y: " << y << " \nloadForEach " << loadForEach << std::endl;
 
-                load += loadForEach;
-            }
+                load += loadForEach; */
+                load += calculateStoneNorth(strings, y, x, ySize);
 
+            }
         }
     }
 
@@ -123,11 +124,10 @@ int calculateStoneNorth(const std::vector<std::string>& strings, int y, int x, c
             return totalRows - (y + 1) - rocksAbove;
         }
     }
-
     return totalRows - rocksAbove;
 }
 
-void StringCycler(std::vector<std::string>& strings) {
+void StringCycler(std::vector<std::string>& strings) { // TODO: Mistake here, nwords
     // Each cycle tilts the platform four times so that the rounded rocks roll north, then west, then south, then east.
     int ySize = strings.size(), xSize = strings[0].size();
 
@@ -147,7 +147,6 @@ void StringCycler(std::vector<std::string>& strings) {
                     strings[0][x] = 'O';
                 }
             }
-
         }
     }
 
@@ -167,7 +166,6 @@ void StringCycler(std::vector<std::string>& strings) {
                     strings[0][x] = 'O';
                 }
             }
-
         }
     }
 
@@ -187,7 +185,6 @@ void StringCycler(std::vector<std::string>& strings) {
                     strings[ySize - 1][x] = 'O';
                 }
             }
-
         }
     }
 
@@ -207,7 +204,6 @@ void StringCycler(std::vector<std::string>& strings) {
                     strings[xSize - 1][x] = 'O';
                 }
             }
-
         }
     }
 }
