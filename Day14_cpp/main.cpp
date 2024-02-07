@@ -9,6 +9,7 @@ int calculateStoneNorth(const std::vector<std::string>& strings, int y, int x, i
 int calculateLoad(const std::vector<std::string>& strings);
 int Part1(const std::vector<std::vector<std::string>>& stringArray);
 void StringCycler(std::vector<std::string>& strings);
+int part2(const std::vector<std::vector<std::string>>& stringArray);
 
 int main() {
 
@@ -17,6 +18,9 @@ int main() {
 
     int answer = Part1(stringArray);
     std::cout << "Answer for part 1: " << answer << std::endl;
+    answer = part2(stringArray);
+    std::cout << "Answer for part 2: " << answer << std::endl;
+
 
     return 0;
 }
@@ -52,7 +56,6 @@ int part2(const std::vector<std::vector<std::string>>& stringArray) {
     int resultCycle = 0;
 
     //so, first figure out the length of a loop of cycles. Essentially, how long does it take for our result to equal the first result
-
     for (auto& strings : stringArray) {
         std::vector<std::string> stringToChange = strings;
         StringCycler(stringToChange);
@@ -207,5 +210,4 @@ void StringCycler(std::vector<std::string>& strings) {
 
         }
     }
-
 }
