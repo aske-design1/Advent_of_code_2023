@@ -52,8 +52,40 @@ bool checkArrangementRec(std::string& row, std::vector<int>& numbers, int curren
 
 }
 
+bool checkIfPossible(std::string substr) {
+    int i;
+    for(i = 0; i < substr.size() - 1; i++)
+        if(substr[i] == '.') return false;
+    return substr[i] != '#';
+}
+
+
 /* std::cout << row;
    for(const int& num : numbers) {
        std::cout << " " << num;
    }
    std::cout << std::endl;*/
+
+/*
+Pseudo code for recursive function:
+    int rec(str, numArr, index, numCounter)
+        if index >= size || numCounter + 1 >= numArr.size()
+            return numCounter + 1 >= numArr.size() ? 1 : 0;
+        else if str[index] == ?
+            if(checkifpossible())
+                return recfunc(str, numArr, index + num + 1, numCounter + 1)
+                    + recfunc(str, numArr, index + 1, numCounter)
+            else if(numArr[numCounter] + index >= size
+                return 0;
+            else
+                return recfunc(str, numArr, index + 1, numCounter);
+        else if str[index] == #
+            if(check if possible())
+                return recfunc(str, numArr, index + num + 1, numCounter + 1)
+            else
+                return 0;
+        else
+            recfunc(str, numArr, index + 1, numCounter)
+
+        checkifpossible(str.substr(index, numArr[numCounter] + 1))
+*/

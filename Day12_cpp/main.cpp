@@ -3,6 +3,7 @@
 
 
 int main() {
+    std::cout << "hello world" << std::endl;
     std::string file = "testcase.txt";
     std::vector<std::string> input;
     ReadFile(file, input);
