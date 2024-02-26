@@ -8,7 +8,6 @@ void ReadFile(const std::string& filename, std::vector<std::string>& stringArray
         while(std::getline(file, line)) {
             stringArray.push_back(line);
         }
-
         file.close();
     } else
         std::cout << "Error opening file" << std::endl;
@@ -16,41 +15,56 @@ void ReadFile(const std::string& filename, std::vector<std::string>& stringArray
 
 int PartOne(const std::vector<std::string>& input) {
     int res = 0;
-    for(const std::string& line : input) {
+    for(const std::string& line : input)
         res += Arrangements(line);
-    }
     return res;
 }
 
 int Arrangements(const std::string& line){
     int split = (int) line.find(' ');
     std::string row = line.substr(0, split);
-    std::string numStr = line.substr(split);
     std::vector<int> numbers;
-    stringToNumbers(numStr, numbers); //Numbers is updated through a reference
+    stringToNumbers(line.substr(split), numbers); //Takes last part of string with numbers and the variable Numbers is updated through a reference
 
-    int arrangements = 0;
     //Logic here
-    for(int i = 0; i < row.size(); i++) {
-        if(row[i] == '?' && checkArrangementRec(row, numbers, i, 0)) {
-            arrangements++;
-        }
-    }
+    return checkArrangementRec(row, numbers, 0, 0);
 
-
-
-    return arrangements;
 }
 
-void stringToNumbers(std::string& str, std::vector<int>& numbers) {
+void stringToNumbers(const std::string& str, std::vector<int>& numbers) {
     for(const char& ch : str)
         if(isdigit(ch))
             numbers.push_back(ch - '0');
 }
 
-bool checkArrangementRec(std::string& row, std::vector<int>& numbers, int currentCh, int numberIndex){
+int checkArrangementRec(std::string& str, std::vector<int>& numArr, int strIndex, int numIndex){
+    if (numIndex + 1 >= numArr.size()) { // If all numbers have been cycled through
+        return 1;
 
+    } else if(strIndex + 1 >= str.size()) { // If we have reached the end of the string and not all numbers have been cycled through
+        return 0;
+
+    } else if (str[strIndex] == '?') { // If the given char is a ? then this line of logic is followed
+        if(checkIfPossible(str.substr(strIndex, numArr[numIndex] + 1))) { //Takes the substring that goes from the current char to the length of the given group
+            return checkArrangementRec(str, numArr, strIndex + numArr[numIndex] + 1, numIndex + 1) +
+            checkArrangementRec(str, numArr, strIndex + 1, numIndex);
+        } else {
+            return checkArrangementRec(str, numArr, strIndex + 1, numIndex);
+        }
+
+    } else if (str[strIndex] == '#') { // If the given char is a # then this line of logic is followed
+        if(checkIfPossible(str.substr(strIndex, numArr[numIndex] + 1))) {
+            return checkArrangementRec(str, numArr, strIndex + numArr[numIndex] + 1, numIndex + 1) +
+                   checkArrangementRec(str, numArr, strIndex + 1, numIndex);
+        } else
+            return 0;
+
+    } else { // If the given char is a '.' then this line of logic is followed
+        return checkArrangementRec(str, numArr, strIndex + 1, numIndex);
+    }
 }
+
+
 
 bool checkIfPossible(std::string substr) {
     int i;
